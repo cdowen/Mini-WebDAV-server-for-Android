@@ -1,3 +1,9 @@
+This is a fork dedicated to external storage file transfer.
+Therefore, the webdav part is substitued with milton2 to enhance compatibility.
+App data directory access is not available in this fork.
+
+Below lies the original readme:
+
 # Mini WebDAV Server for Android [![](https://jitpack.io/v/gregko/Mini-WebDAV-server-for-Android.svg)](https://jitpack.io/#gregko/Mini-WebDAV-server-for-Android)
 
 I originally cloned this from https://github.com/erspicu/Baxermux.server.http, however there
