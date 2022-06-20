@@ -1,4 +1,4 @@
-package com.hyperionics.wdserverlib;
+package com.hyperionics.webdavserver;
 
 // ChunkedInputStream - an InputStream that implements HTTP/1.1 chunking
 //

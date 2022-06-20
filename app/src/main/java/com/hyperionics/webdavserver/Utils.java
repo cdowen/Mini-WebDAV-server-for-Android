@@ -1,6 +1,9 @@
-package com.hyperionics.wdserverlib;
+package com.hyperionics.webdavserver;
+
+import static com.hyperionics.webdavserver.HttpService.TAG;
 
 import android.util.Log;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,8 +16,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-
-import static com.hyperionics.wdserverlib.HttpService.TAG;
 
 public class Utils
 {

@@ -1,4 +1,7 @@
-package com.hyperionics.wdserverlib;
+package com.hyperionics.webdavserver;
+
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static com.hyperionics.webdavserver.HttpService.TAG;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -31,9 +34,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static com.hyperionics.wdserverlib.HttpService.TAG;
-
 public class ServerSettingsActivity extends AppCompatActivity implements EasyPermissions.RationaleCallbacks
 {
     //region Fields
@@ -48,16 +48,16 @@ public class ServerSettingsActivity extends AppCompatActivity implements EasyPer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(com.hyperionics.webdavserver.R.layout.activity_settings);
 
-        TextView appVer = findViewById(R.id.app_ver);
-        appVer.setText(getString(R.string.wds_app_name) + " ver. " + BuildConfig.VERSION_NAME);
+        TextView appVer = findViewById(com.hyperionics.webdavserver.R.id.app_ver);
+        appVer.setText(getString(com.hyperionics.webdavserver.R.string.wds_app_name) + " ver. " + BuildConfig.VERSION_NAME);
 
         // UI object initialization assignment
-        mIpStatusText = findViewById(R.id.ip_status_textview);
-        mServerSwitch = findViewById(R.id.server_switch);
-        mAllStorageSwitch = findViewById(R.id.all_storage);
-        mPortEdit = findViewById(R.id.portNo);
+        mIpStatusText = findViewById(com.hyperionics.webdavserver.R.id.ip_status_textview);
+        mServerSwitch = findViewById(com.hyperionics.webdavserver.R.id.server_switch);
+        mAllStorageSwitch = findViewById(com.hyperionics.webdavserver.R.id.all_storage);
+        mPortEdit = findViewById(com.hyperionics.webdavserver.R.id.portNo);
         int portNo = getSharedPreferences("WebDav", MODE_PRIVATE).getInt("port", 8080);
         mPortEdit.setText(Integer.toString(portNo));
         mPortEdit.addTextChangedListener(new TextWatcher() {
@@ -66,14 +66,14 @@ public class ServerSettingsActivity extends AppCompatActivity implements EasyPer
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mHelpText.setText(getString(R.string.wds_adb_help).replace("%port", s));
+                mHelpText.setText(getString(com.hyperionics.webdavserver.R.string.wds_adb_help).replace("%port", s));
             }
 
             @Override
             public void afterTextChanged(Editable s) { }
         });
-        mHelpText = findViewById(R.id.help_txt);
-        mHelpText.setText(getString(R.string.wds_adb_help).replace("%port", Integer.toString(portNo)));
+        mHelpText = findViewById(com.hyperionics.webdavserver.R.id.help_txt);
+        mHelpText.setText(getString(com.hyperionics.webdavserver.R.string.wds_adb_help).replace("%port", Integer.toString(portNo)));
         boolean wholeStorage = getSharedPreferences("WebDav", MODE_PRIVATE).getBoolean("WholeStorage", false);
         if (wholeStorage && !isExternalStorageManager()) {
             wholeStorage = false;
@@ -105,7 +105,7 @@ public class ServerSettingsActivity extends AppCompatActivity implements EasyPer
                     }
                     else {
                         // Ask for storage access
-                        EasyPermissions.requestPermissions(ServerSettingsActivity.this, getString(R.string.wds_storage_perm),
+                        EasyPermissions.requestPermissions(ServerSettingsActivity.this, getString(com.hyperionics.webdavserver.R.string.wds_storage_perm),
                                     RESULT_EXT_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                     }
                 }
@@ -131,11 +131,11 @@ public class ServerSettingsActivity extends AppCompatActivity implements EasyPer
             }
             else {
                 if (Build.VERSION.SDK_INT >= 23 && !shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.wds_approve_perm,
-                            Snackbar.LENGTH_LONG).setAction(R.string.wds_action_settings, new View.OnClickListener() {
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), com.hyperionics.webdavserver.R.string.wds_approve_perm,
+                            Snackbar.LENGTH_LONG).setAction(com.hyperionics.webdavserver.R.string.wds_action_settings, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())));
+                            startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())));
                         }
                     });
                     View snackbarView = snackbar.getView();
@@ -196,7 +196,7 @@ public class ServerSettingsActivity extends AppCompatActivity implements EasyPer
                 .putBoolean("WholeStorage", wholeStorage)
                 .apply();
         if (Build.VERSION.SDK_INT >= 30 && !wholeStorage && isExternalStorageManager()) {
-            Toast.makeText(ServerSettingsActivity.this, R.string.wds_withdraw_perm, Toast.LENGTH_LONG).show();
+            Toast.makeText(ServerSettingsActivity.this, com.hyperionics.webdavserver.R.string.wds_withdraw_perm, Toast.LENGTH_LONG).show();
             new Handler(getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {

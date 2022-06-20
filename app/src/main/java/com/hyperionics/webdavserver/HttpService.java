@@ -1,4 +1,4 @@
-package com.hyperionics.wdserverlib;
+package com.hyperionics.webdavserver;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -23,7 +23,6 @@ import io.milton.http.HttpManager;
 import io.milton.http.fs.FileSystemResourceFactory;
 import io.milton.http.fs.NullSecurityManager;
 import io.milton.simpleton.SimpletonServer;
-import java.io.File;
 
 // local service program reference
 // http://developer.android.com/reference/android/app/Service.html#LocalServiceSample
@@ -95,9 +94,9 @@ public class HttpService extends Service {
 		PendingIntent pendingIntent = PendingIntent.getActivity(this,
 				0, notificationIntent, 0);
 		Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-				.setContentTitle(getString(R.string.wds_app_name))
-				.setContentText(getString(R.string.srv_running))
-				.setSmallIcon(R.drawable.ic_clip)
+				.setContentTitle(getString(com.hyperionics.webdavserver.R.string.wds_app_name))
+				.setContentText(getString(com.hyperionics.webdavserver.R.string.srv_running))
+				.setSmallIcon(com.hyperionics.webdavserver.R.drawable.ic_clip)
 				.setContentIntent(pendingIntent)
 				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 				.setCategory(NotificationCompat.CATEGORY_SERVICE)
