@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
 
@@ -35,8 +36,7 @@ public class HttpService extends Service {
 	private WifiManager.WifiLock mWifiLock = null;
 	private PowerManager.WakeLock mWakeLock = null;
 	private final IBinder mBinder = new LocalBinder();
-	private File mDataDir;
-	public boolean mDone = false;
+	public boolean running = false;
 	//endregion
 
 	public class LocalBinder extends Binder {
@@ -92,18 +92,21 @@ public class HttpService extends Service {
 		}
 		Intent notificationIntent = new Intent(this, ServerSettingsActivity.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this,
-				0, notificationIntent, 0);
-		Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+				0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+		Notification notification = new Notification.Builder(this, CHANNEL_ID)
 				.setContentTitle(getString(com.hyperionics.webdavserver.R.string.wds_app_name))
 				.setContentText(getString(com.hyperionics.webdavserver.R.string.srv_running))
 				.setSmallIcon(com.hyperionics.webdavserver.R.drawable.ic_clip)
 				.setContentIntent(pendingIntent)
-				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+				.setVisibility(Notification.VISIBILITY_PUBLIC)
 				.setCategory(NotificationCompat.CATEGORY_SERVICE)
+				.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)
 				.setOngoing(true)
 				.build();
 		startForeground(1, notification);
-		(new connect_client()).start(); // Start http service
+		if (!running) {
+			(new connect_client()).start(); // Start http service
+		}
 		return START_NOT_STICKY;
 	}
 
@@ -111,7 +114,6 @@ public class HttpService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 		//Log.d(TAG, "service destroy");
-		mDone = true;
 
 		// Close the server service
 		try {
@@ -122,6 +124,7 @@ public class HttpService extends Service {
 		}
 		if (mWakeLock != null && mWakeLock.isHeld())
 			mWakeLock.release();
+		running = false;
 	}
 
 	private SimpletonServer ss;
@@ -132,7 +135,7 @@ public class HttpService extends Service {
 				mWifiLock.acquire();
 			}
 
-			String homeFolder = "/sdcard";
+			String homeFolder = Environment.getExternalStorageDirectory().getPath();
 			int port = getSharedPreferences("WebDav", MODE_PRIVATE).getInt("port", 8080);
 			FileSystemResourceFactory resourceFactory = new FileSystemResourceFactory(new File(homeFolder),
 					new NullSecurityManager(), "/");
@@ -148,7 +151,7 @@ public class HttpService extends Service {
 			if (mWifiLock != null && mWifiLock.isHeld()) {
 				mWifiLock.release();
 			}
-
+			running = true;
 			//Log.d(TAG, "http server close");
 		}
 	}

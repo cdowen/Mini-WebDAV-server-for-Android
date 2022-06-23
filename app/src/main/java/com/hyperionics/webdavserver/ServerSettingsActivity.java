@@ -32,6 +32,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import pub.devrel.easypermissions.BuildConfig;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class ServerSettingsActivity extends AppCompatActivity implements EasyPermissions.RationaleCallbacks
